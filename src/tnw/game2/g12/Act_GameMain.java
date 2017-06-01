@@ -107,7 +107,7 @@ public class Act_GameMain {
 
 		private void mainDraw(Graphics2D g) {
 
-			// MAP描画
+			// MAPP描画
 			manager.map.drawMap(g, wind);
 
 		}
