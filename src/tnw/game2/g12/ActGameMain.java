@@ -11,14 +11,14 @@ import javax.swing.JFrame;
 
 
 //◆MAIN◆//
-public class Act_GameMain {
+public class ActGameMain {
 
 
 	GameSetting setting = new GameSetting();
 	GameInput input = new GameInput();
 	GameManager manager = new GameManager();
 
-	JFrame wind = new JFrame("2ndSessionProject");
+	JFrame wind = new JFrame("3ndSessionProject");
 	BufferStrategy offimage;
 
 	Timer TM = new Timer();
@@ -31,7 +31,7 @@ public class Act_GameMain {
 	// ・windowの場所
 	// -----------------------------
 
-	Act_GameMain() {
+	ActGameMain() {
 
 		// Setup javaframe window & graphics2D buffer
 		wind.setIgnoreRepaint(true);// JFrameの標準書き換え処理無効
@@ -129,7 +129,7 @@ public class Act_GameMain {
 	// ◆ここからプログラムが動く◆//
 	public static void main(String[] args) throws Throwable {
 
-		Act_GameMain Game = new Act_GameMain();
+		ActGameMain Game = new ActGameMain();
 		do {
 			Thread.sleep(250);
 			if (GameInput.K_ESC_R) {
@@ -150,10 +150,12 @@ public class Act_GameMain {
 				Game.finalize();
 				Game = null;
 
-				Game = new Act_GameMain();
+				Game = new ActGameMain();
 			}
 			Thread.sleep(50);
 		} while (Game != null);
 
 	}
 }
+
+

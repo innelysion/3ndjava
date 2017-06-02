@@ -4,11 +4,12 @@ public class GameManager {
 
 
 	GameData gamedata = new GameData();
-	Act_Map map = new Act_Map();
+	ActMap map = new ActMap();
 
 	GameManager(){
-		gamedata.loadMapData("D:\\javaIO\\S0_Hit.csv");
-		map.setMapData(gamedata.getData("MAP"));
+		gamedata.loadMapData("S0_Map.csv");
+		gamedata.loadMapHitData("S0_Hit.csv");
+		map.setMapData1(gamedata.getData("MAP"), gamedata.getData("MAPHIT"));
 	}
 
 	public void update(){

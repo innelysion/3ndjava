@@ -13,7 +13,7 @@ public class GameSetting {
 	static boolean SCREEN_FREEZING;
 	static boolean GAMEOVERING;
 	static int DANMAKU_LIMIT, VFX_LIMIT;
-	static Font DEFAULT_FONT = new Font("Default", Font.BOLD, 13);
+	static Font DEFAULT_FONT = new Font("Default", Font.BOLD, 16);
 	static Insets INSETS;
 
 	// for mobile screen
