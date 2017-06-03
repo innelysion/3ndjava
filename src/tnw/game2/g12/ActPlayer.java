@@ -4,7 +4,7 @@ public class ActPlayer {
 
 	
 	public void update(){
-		switch (GameInput.DIR8){
+		switch (Input.DIR8){
 		case 1:
 			break;
 		case 2:

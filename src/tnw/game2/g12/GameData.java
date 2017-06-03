@@ -7,106 +7,55 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+//データIOと変換の管理クラス
 public class GameData {
 
-	private ArrayList<String> inputData = new ArrayList<String>();
-	private ArrayList<String> inputHitData = new ArrayList<String>();
-	private ArrayList<ArrayList<Integer>> gameMapData = new ArrayList<ArrayList<Integer>>();
-	private ArrayList<ArrayList<Integer>> gameMapHitData = new ArrayList<ArrayList<Integer>>();
-
-	GameData() {
-
-	}
-
-	public void update() {
-
-	}
-
-//	public ArrayList<ArrayList<Integer>> getMapData() {
-//		return gameMapData;
-//
-//	}
-
-	public void loadMapData(String file) {
-		readFileByLines(file, inputData);
-		for (int i = 0; i < inputData.size(); i++) {
-			gameMapData.add(convertMapdata(inputData.get(i), ','));
+	// Get list format map data
+	public ArrayList<ArrayList<Integer>> getMapData(String file) {
+		ArrayList<String> tempStrList = new ArrayList<String>();
+		ArrayList<ArrayList<Integer>> data = new ArrayList<ArrayList<Integer>>();
+		int s;
+		// データの容器リストをクリア
+		tempStrList.clear();
+		data.clear();
+		// ファイルを読み込む
+		readFileByLines(file, tempStrList);
+		// 行ごとにコンマ抜き
+		s = tempStrList.size();
+		for (int i = 0; i < s; i++) {
+			data.add(convertMapdata(tempStrList.get(i), ','));
 		}
+
+		return data;
 	}
 
-	public void loadMapHitData(String file) {
-		readFileByLines(file, inputHitData);
-		for (int i = 0; i < inputHitData.size(); i++) {
-			gameMapHitData.add(convertMapdata(inputHitData.get(i), ','));
-		}
-	}
+	// Read text files by lines and put it into parameter "strlist"
+	private void readFileByLines(String filepath, ArrayList<String> strlist) {
 
-	public ArrayList<ArrayList<Integer>> getData(String key) {
-		switch (key) {
-		case "MAP":
-			return gameMapData;
-		case "MAPHIT":
-			return gameMapHitData;
-		}
-		return null;
-
-	}
-
-	// @SuppressWarnings("unchecked")
-	// public <T> T getData(String key) {
-	// T re = null;
-	// Class<T> c = null;
-	// switch (key) {
-	// case "MAP1":
-	// c = (Class<T>) gameMapData.getClass();
-	// re = c.cast(gameMapData);
-	// break;
-	// case "MAPHIT1":
-	// c = (Class<T>) gameMapHitData.getClass();
-	// re = c.cast(gameMapHitData);
-	// break;
-	// }
-	// if (re != null)
-	//
-	// {
-	// return re;
-	// }
-	// System.out.println("■WARNING : FAILED TO GET DATA,【null】 RETURNED■");
-	// return null;
-	// }
-
-	public void drawMsg(Graphics2D g, JFrame wind) {
-
-	}
-
-	public void readFileByLines(String file, ArrayList<String> strlist) {
-
+		InputStream is = this.getClass().getResourceAsStream(filepath);
+		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		String tempstr;
 		try {
-
-			FileReader fr = new FileReader(file);
-			BufferedReader bReader = new BufferedReader(fr);
-
-			String tempdata;
-			while ((tempdata = bReader.readLine()) != null) {
-				strlist.add(tempdata);
+			while ((tempstr = br.readLine()) != null) {
+				strlist.add(tempstr);
 			}
-
-			bReader.close();
-
+			br.close();
 		} catch (IOException e) {
 			System.out.println("text file read FAILED!");
 		}
 	}
 
+	// Cut the string witch division by a special char into numeric list
 	private ArrayList<Integer> convertMapdata(String tempdata, char ch) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		String str = "";
-
 		for (char i : tempdata.toCharArray()) {
 			if (i == ch) {
 				list.add(Integer.parseInt(str));
@@ -116,48 +65,64 @@ public class GameData {
 			str += i;
 		}
 		list.add(Integer.parseInt(str));
-
 		return list;
 	}
 
 }
 
-interface GameTools {
+// 画像データを分割して複数の矩形ブロックとして処理と描画
+class KomaImage {
 
-	// 画像ファイルを読み込む
+	private BufferedImage file; // 画像ファイル
+	private int widthBlock; // 横分割数
+	private int heightBlock; // 縦分割数
 
-	public default BufferedImage loadImage(String filename) {
-		BufferedImage image = null;
-		try {
-			File f1 = new File(filename);
-			image = ImageIO.read(f1);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return image;
+	KomaImage(String fileName, int wBlock, int hBlock) {
+		setNewImage(fileName);
+		setNewBlock(wBlock, hBlock);
 	}
 
-	// コマ画像を描画
-	public default void drawKoma(Graphics2D g, JFrame window, KomaImage image, int imageIndex, double dX, double dY,
-			float opacity) {
+	// 新しい画像と分割数をセット
+	public void setNewAll(String fileName, int wBlock, int hBlock) {
+		setNewImage(fileName);
+		setNewBlock(wBlock, hBlock);
+	}
 
+	// 新しい画像だけをセット
+	public void setNewImage(String fileName) {
+		file = loadImage(fileName);
+	}
+
+	// 新しいブロック分割だけをセット
+	public void setNewBlock(int wBlock, int hBlock) {
+		widthBlock = wBlock <= 0 ? 1 : wBlock;
+		heightBlock = hBlock <= 0 ? 1 : hBlock;
+	}
+
+	// 矩形ブロック処理と描画
+	// 画像の左上の矩形ブロックにblockIndexを1から数える
+	// 横4ブロック縦2ブロックの画像の場合の例:
+	// [1][2][3][4]
+	// [5][6][7][8]
+	public void drawKoma(Graphics2D g, JFrame window, int blockIndex, double dX, double dY, float opacity) {
+
+		// indexの値を制限
+		blockIndex = blockIndex <= 0 ? 1 : blockIndex;
 		// 一コマの幅をゲット
-		int blockW = image.file.getWidth() / image.widthBlock;
+		int blockW = this.file.getWidth() / this.widthBlock;
 		// 一コマの高さをゲット
-		int blockH = image.file.getHeight() / image.heightBlock;
+		int blockH = this.file.getHeight() / this.heightBlock;
 		// 描画したいコマの左上端座標をゲット
-		int indexX = (imageIndex % image.widthBlock == 0)// if
-				? blockW * (image.widthBlock - 1)// do
-				: blockW * ((imageIndex % image.widthBlock) - 1);// else do
-		int indexY = (imageIndex % image.widthBlock == 0)// if
-				? blockH * (imageIndex / image.widthBlock - 1)// do
-				: blockH * (imageIndex / image.widthBlock);// else do
+		int indexX = (blockIndex % this.widthBlock == 0) ? blockW * (this.widthBlock - 1)
+				: blockW * ((blockIndex % this.widthBlock) - 1);
+		int indexY = (blockIndex % this.widthBlock == 0) ? blockH * (blockIndex / this.widthBlock - 1)
+				: blockH * (blockIndex / this.widthBlock);
 		// 不透明度
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity)));
 
 		// 描画
-		g.drawImage(image.file,
-				// 画面に出したいところ
+		g.drawImage(this.file,
+				// 画面に描画する場所
 				(int) (dX), // 左上端X座標
 				(int) (dY), // 左上端Y座標
 				(int) (dX + blockW), // 右下端X座標
@@ -170,24 +135,18 @@ interface GameTools {
 				window);
 
 		// 不透明度リセット
-
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
-
 	}
 
-}
-
-
-class KomaImage implements GameTools {
-
-	public BufferedImage file;
-	public int widthBlock;
-	public int heightBlock;
-
-	KomaImage(String fileName, int wBlock, int hBlock) {
-		file = loadImage(fileName);
-		widthBlock = wBlock;
-		heightBlock = hBlock;
+	// 画像ファイルを読み込む
+	private BufferedImage loadImage(String filename) {
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(getClass().getResource(filename));
+		} catch (IOException e) {
+			System.out.println("■WARNING : FAILED TO LOAD IMAGE■");
+		}
+		return image;
 	}
 
 }
