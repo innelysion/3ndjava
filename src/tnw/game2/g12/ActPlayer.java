@@ -92,7 +92,7 @@ public class ActPlayer {
 				playerMapPosY -= playerMoveSpeed;
 				playerMapPosX += playerMoveSpeed;
 			}
-			playerFoward = 3;
+			playerFoward = 3;//
 			break;
 		case 5:
 			if (checkHit(5)) {
