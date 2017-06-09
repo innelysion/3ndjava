@@ -57,8 +57,8 @@ public class ActMap {
 				: scrollTargetY;
 
 		// Set final scroll position
-		offsetX += (scrollTargetX - offsetX) / 16;
-		offsetY += (scrollTargetY - offsetY) / 16;
+		offsetX += (scrollTargetX - offsetX) / 2;
+		offsetY += (scrollTargetY - offsetY) / 2;
 
 	}
 

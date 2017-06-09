@@ -41,45 +41,83 @@ public class ActPlayer {
 		g.drawString("mapY : " + Integer.toString(playerMapPosY), 50, 110);
 	}
 
+	private boolean checkHit(int dir) {
+		switch (dir){
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
+			break;
+		}
+		return false;
+	}
+
 	public void update(ActMap map) {
 
 		counterAnime = counterAnime > 1000 ? 0 : counterAnime + 1;
 
 		switch (Input.DIR8) {
 		case 1:
-			playerMapPosX -= playerMoveSpeed;
+			if (checkHit(1)) {
+				playerMapPosX -= playerMoveSpeed;
+			}
 			playerFoward = 1;
 			break;
 		case 2:
-			playerMapPosX -= playerMoveSpeed;
-			playerMapPosY -= playerMoveSpeed;
+			if (checkHit(2)) {
+				playerMapPosX -= playerMoveSpeed;
+				playerMapPosY -= playerMoveSpeed;
+			}
 			playerFoward = 1;
 			break;
 		case 3:
-			playerMapPosY -= playerMoveSpeed;
+			if (checkHit(3)) {
+				playerMapPosY -= playerMoveSpeed;
+			}
 			playerFoward = 2;
 			break;
 		case 4:
-			playerMapPosY -= playerMoveSpeed;
-			playerMapPosX += playerMoveSpeed;
+			if (checkHit(4)) {
+				playerMapPosY -= playerMoveSpeed;
+				playerMapPosX += playerMoveSpeed;
+			}
 			playerFoward = 3;
 			break;
 		case 5:
-			playerMapPosX += playerMoveSpeed;
+			if (checkHit(5)) {
+				playerMapPosX += playerMoveSpeed;
+			}
 			playerFoward = 3;
 			break;
 		case 6:
-			playerMapPosX += playerMoveSpeed;
-			playerMapPosY += playerMoveSpeed;
+			if (checkHit(6)) {
+				playerMapPosX += playerMoveSpeed;
+				playerMapPosY += playerMoveSpeed;
+			}
 			playerFoward = 3;
 			break;
 		case 7:
-			playerMapPosY += playerMoveSpeed;
+			if (checkHit(7)) {
+				playerMapPosY += playerMoveSpeed;
+			}
 			playerFoward = 4;
 			break;
 		case 8:
-			playerMapPosX -= playerMoveSpeed;
-			playerMapPosY += playerMoveSpeed;
+			if (checkHit(8)) {
+				playerMapPosX -= playerMoveSpeed;
+				playerMapPosY += playerMoveSpeed;
+			}
 			playerFoward = 1;
 			break;
 		}
@@ -101,21 +139,21 @@ public class ActPlayer {
 			}
 		}
 
-		//Fix map to screen position
-//		if (playerMapPosX <= GS.WINSIZE_W / 2) {
-//			playerScreenPosX = playerMapPosX;
-//		}
-//		if (playerMapPosY <= GS.WINSIZE_H / 2) {
-//			playerScreenPosY = playerMapPosY;
-//		}
-//		if (playerMapPosX >= map.mapSizeX * 16 - GS.WINSIZE_W / 2) {
-//			playerScreenPosX = GS.WINSIZE_W / 2 + playerMapPosX - (map.mapSizeX * 16 - GS.WINSIZE_W / 2);
-//		}
-//		if (playerMapPosY >= map.mapSizeY * 16 - GS.WINSIZE_H / 2) {
-//			playerScreenPosY = GS.WINSIZE_H / 2 + playerMapPosY - (map.mapSizeY * 16 - GS.WINSIZE_H / 2);
-//		}
+		// Fix map to screen position
+		if (playerMapPosX <= GS.WINSIZE_W / 2) {
+			playerScreenPosX = playerMapPosX;
+		}
+		if (playerMapPosY <= GS.WINSIZE_H / 2) {
+			playerScreenPosY = playerMapPosY;
+		}
+		if (playerMapPosX >= map.mapSizeX * 16 - GS.WINSIZE_W / 2) {
+			playerScreenPosX = GS.WINSIZE_W / 2 + playerMapPosX - (map.mapSizeX * 16 - GS.WINSIZE_W / 2);
+		}
+		if (playerMapPosY >= map.mapSizeY * 16 - GS.WINSIZE_H / 2) {
+			playerScreenPosY = GS.WINSIZE_H / 2 + playerMapPosY - (map.mapSizeY * 16 - GS.WINSIZE_H / 2);
+		}
 
-		map.scrollTargetX = -playerMapPosX;// + GS.WINSIZE_W / 2 + cameraLimitSize;
-		map.scrollTargetY = -playerMapPosY;// + GS.WINSIZE_H / 2 + cameraLimitSize;
+		map.scrollTargetX = -playerMapPosX + GS.WINSIZE_W / 2;
+		map.scrollTargetY = -playerMapPosY + GS.WINSIZE_H / 2;
 	}
 }
