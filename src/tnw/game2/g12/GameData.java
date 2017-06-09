@@ -4,8 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +25,7 @@ public class GameData {
 		data.clear();
 		// ファイルを読み込む
 		readFileByLines(file, tempStrList);
+
 		// 行ごとにコンマ抜き
 		s = tempStrList.size();
 		for (int i = 0; i < s; i++) {
@@ -39,7 +38,7 @@ public class GameData {
 	// Read text files by lines and put it into parameter "strlist"
 	private void readFileByLines(String filepath, ArrayList<String> strlist) {
 
-		InputStream is = this.getClass().getResourceAsStream(filepath);
+		InputStream is = getClass().getResourceAsStream(filepath);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		String tempstr;
 		try {
@@ -100,28 +99,28 @@ class KomaImage {
 	}
 
 	// 矩形ブロック処理と描画
-	// 画像の左上の矩形ブロックにblockIndexを1から数える
+	// 画像の左上の矩形ブロックにblockIndexを0から数える
 	// 横4ブロック縦2ブロックの画像の場合の例:
-	// [1][2][3][4]
-	// [5][6][7][8]
+	// [0][1][2][3]
+	// [4][5][6][7]
 	public void drawKoma(Graphics2D g, JFrame window, int blockIndex, double dX, double dY, float opacity) {
 
 		// indexの値を制限
-		blockIndex = blockIndex <= 0 ? 1 : blockIndex;
+		blockIndex = blockIndex < 0 ? 0 : blockIndex + 1;
 		// 一コマの幅をゲット
-		int blockW = this.file.getWidth() / this.widthBlock;
+		int blockW = file.getWidth() / widthBlock;
 		// 一コマの高さをゲット
-		int blockH = this.file.getHeight() / this.heightBlock;
+		int blockH = file.getHeight() / heightBlock;
 		// 描画したいコマの左上端座標をゲット
-		int indexX = (blockIndex % this.widthBlock == 0) ? blockW * (this.widthBlock - 1)
-				: blockW * ((blockIndex % this.widthBlock) - 1);
-		int indexY = (blockIndex % this.widthBlock == 0) ? blockH * (blockIndex / this.widthBlock - 1)
-				: blockH * (blockIndex / this.widthBlock);
+		int indexX = (blockIndex % widthBlock == 0) ? blockW * (widthBlock - 1)
+				: blockW * ((blockIndex % widthBlock) - 1);
+		int indexY = (blockIndex % widthBlock == 0) ? blockH * (blockIndex / widthBlock - 1)
+				: blockH * (blockIndex / widthBlock);
 		// 不透明度
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity)));
 
 		// 描画
-		g.drawImage(this.file,
+		g.drawImage(file,
 				// 画面に描画する場所
 				(int) (dX), // 左上端X座標
 				(int) (dY), // 左上端Y座標
