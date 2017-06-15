@@ -111,7 +111,6 @@ public class Input implements MouseListener, MouseMotionListener, MouseWheelList
 			DIR8 = 0;
 			DIR4 = 0;
 		}
-
 	}
 
 	@Override

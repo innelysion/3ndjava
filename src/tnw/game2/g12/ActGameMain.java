@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 class GameMain {
 
 	//Initialize jframe window and graphic
-	JFrame window = new JFrame();
+	JFrame window = new JFrame("114514");
 	Insets insets;
 	BufferStrategy drawer;
 
@@ -31,13 +31,13 @@ class GameMain {
 	GameMain() {
 
 		//Setup jframe window and graphic
-		insets = window.getInsets();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(GS.WINSIZE_W + insets.left + insets.right, GS.WINSIZE_H + insets.top + insets.bottom);
 		window.setResizable(false);
-		window.setLocationRelativeTo(null);
 		window.setBackground(Color.BLACK);
 		window.setVisible(true);
+		insets = window.getInsets();
+		window.setSize(GS.WINSIZE_W + insets.left + insets.right, GS.WINSIZE_H + insets.top + insets.bottom);
+		window.setLocationRelativeTo(null);
 		window.setIgnoreRepaint(true);
 		window.createBufferStrategy(2);
 		drawer = window.getBufferStrategy();

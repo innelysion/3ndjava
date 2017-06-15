@@ -8,152 +8,119 @@ public class ActPlayer {
 
 	private KomaImage img;
 
-	private int playerAnime;
-	private int playerFoward;
-	int playerScreenPosX;
-	int playerScreenPosY;
-	int playerMapPosX;
-	int playerMapPosY;
-	int playerMoveSpeed;
-	int cameraLimitSize;
+	private int animeIndex;
+	private int animeCnt;
+	private int facing;
+	private int mapPosX;
+	private int mapPosY;
+	private int moveSpeed;
+	private int moveSpeedOblique;
 
-	int counterAnime;
+	private boolean freeCamera;
+
+	// read only
+	int X;
+	int Y;
 
 	ActPlayer() {
 		img = new KomaImage("image/humo.png", 3, 5);
-		playerScreenPosX = GS.WINSIZE_W / 2;
-		playerScreenPosY = GS.WINSIZE_H / 2;
-		playerMapPosX = 500;
-		playerMapPosY = 500;
-		playerAnime = 0;
-		playerFoward = 4;
-		playerMoveSpeed = 4;
-		cameraLimitSize = 150;
-
-		counterAnime = 0;
+		mapPosX = 250;
+		mapPosY = 250;
+		animeIndex = 0;
+		facing = 4;
+		moveSpeed = 4;
+		moveSpeedOblique = 3;
+		animeCnt = 0;
+		freeCamera = false;
 	}
 
-	void draw(Graphics2D g, JFrame w) {
-		img.drawKoma(g, w, playerAnime, playerScreenPosX, playerScreenPosY, 1.0f);
-		g.drawString("screenX : " + Integer.toString(playerScreenPosX), 50, 50);
-		g.drawString("screenY : " + Integer.toString(playerScreenPosY), 50, 70);
-		g.drawString("mapX : " + Integer.toString(playerMapPosX), 50, 90);
-		g.drawString("mapY : " + Integer.toString(playerMapPosY), 50, 110);
-	}
-
-	private boolean checkHit(int dir) {
-		switch (dir){
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
-			break;
+	public void update() {
+		if (Input.keyRe.Z) {
+			freeCamera = !freeCamera;
 		}
-		return false;
+
+		if (!freeCamera) {
+			move();
+		} else {
+			facing = 3;
+			mapPosX++;
+		}
+		animation();
+		X = mapPosX;
+		Y = mapPosY;
 	}
 
-	public void update(ActMap map) {
+	public void draw(Graphics2D g, JFrame w, double dX, double dY) {
+		img.drawKoma(g, w, animeIndex, dX, dY, 1.0f);
+	}
 
-		counterAnime = counterAnime > 1000 ? 0 : counterAnime + 1;
+	private void animation() {
+		animeCnt = animeCnt > 1000 ? 0 : animeCnt + 1;
+		if (animeCnt % 10 == 0) {
+			switch (facing) {
+			case 1:
+				animeIndex = animeIndex < 6 || animeIndex >= 8 ? 6 : animeIndex + 1;
+				break;
+			case 2:
+				animeIndex = animeIndex < 0 || animeIndex >= 2 ? 0 : animeIndex + 1;
+				break;
+			case 3:
+				animeIndex = animeIndex < 9 || animeIndex >= 11 ? 9 : animeIndex + 1;
+				break;
+			case 4:
+				animeIndex = animeIndex < 3 || animeIndex >= 5 ? 3 : animeIndex + 1;
+				break;
+			}
+		}
+	}
+
+	private void move() {
+		if (Input.keyPr.SHIFT) {
+			moveSpeed = 6;
+			moveSpeedOblique = 4;
+		} else {
+			moveSpeed = 4;
+			moveSpeedOblique = 3;
+		}
 
 		switch (Input.DIR8) {
 		case 1:
-			if (checkHit(1)) {
-				playerMapPosX -= playerMoveSpeed;
-			}
-			playerFoward = 1;
+			mapPosX -= moveSpeed;
+			facing = 1;
 			break;
 		case 2:
-			if (checkHit(2)) {
-				playerMapPosX -= playerMoveSpeed;
-				playerMapPosY -= playerMoveSpeed;
-			}
-			playerFoward = 1;
+			mapPosX -= moveSpeedOblique;
+			mapPosY -= moveSpeedOblique;
+			facing = 1;
 			break;
 		case 3:
-			if (checkHit(3)) {
-				playerMapPosY -= playerMoveSpeed;
-			}
-			playerFoward = 2;
+			mapPosY -= moveSpeed;
+			facing = 2;
 			break;
 		case 4:
-			if (checkHit(4)) {
-				playerMapPosY -= playerMoveSpeed;
-				playerMapPosX += playerMoveSpeed;
-			}
-			playerFoward = 3;//
+			mapPosY -= moveSpeedOblique;
+			mapPosX += moveSpeedOblique;
+			facing = 3;
 			break;
 		case 5:
-			if (checkHit(5)) {
-				playerMapPosX += playerMoveSpeed;
-			}
-			playerFoward = 3;
+			mapPosX += moveSpeed;
+			facing = 3;
 			break;
 		case 6:
-			if (checkHit(6)) {
-				playerMapPosX += playerMoveSpeed;
-				playerMapPosY += playerMoveSpeed;
-			}
-			playerFoward = 3;
+			mapPosX += moveSpeedOblique;
+			mapPosY += moveSpeedOblique;
+			facing = 3;
 			break;
 		case 7:
-			if (checkHit(7)) {
-				playerMapPosY += playerMoveSpeed;
-			}
-			playerFoward = 4;
+			mapPosY += moveSpeed;
+			facing = 4;
 			break;
 		case 8:
-			if (checkHit(8)) {
-				playerMapPosX -= playerMoveSpeed;
-				playerMapPosY += playerMoveSpeed;
-			}
-			playerFoward = 1;
+			mapPosX -= moveSpeedOblique;
+			mapPosY += moveSpeedOblique;
+			facing = 1;
 			break;
 		}
-
-		if (counterAnime % 10 == 0) {
-			switch (playerFoward) {
-			case 1:
-				playerAnime = playerAnime < 6 || playerAnime >= 8 ? 6 : playerAnime + 1;
-				break;
-			case 2:
-				playerAnime = playerAnime < 0 || playerAnime >= 2 ? 0 : playerAnime + 1;
-				break;
-			case 3:
-				playerAnime = playerAnime < 9 || playerAnime >= 11 ? 9 : playerAnime + 1;
-				break;
-			case 4:
-				playerAnime = playerAnime < 3 || playerAnime >= 5 ? 3 : playerAnime + 1;
-				break;
-			}
-		}
-
-		// Fix map to screen position
-		if (playerMapPosX <= GS.WINSIZE_W / 2) {
-			playerScreenPosX = playerMapPosX;
-		}
-		if (playerMapPosY <= GS.WINSIZE_H / 2) {
-			playerScreenPosY = playerMapPosY;
-		}
-		if (playerMapPosX >= map.mapSizeX * 16 - GS.WINSIZE_W / 2) {
-			playerScreenPosX = GS.WINSIZE_W / 2 + playerMapPosX - (map.mapSizeX * 16 - GS.WINSIZE_W / 2);
-		}
-		if (playerMapPosY >= map.mapSizeY * 16 - GS.WINSIZE_H / 2) {
-			playerScreenPosY = GS.WINSIZE_H / 2 + playerMapPosY - (map.mapSizeY * 16 - GS.WINSIZE_H / 2);
-		}
-
-		map.scrollTargetX = -playerMapPosX + GS.WINSIZE_W / 2;
-		map.scrollTargetY = -playerMapPosY + GS.WINSIZE_H / 2;
 	}
+
 }

@@ -17,6 +17,8 @@ public class ActManager {
 	// Game objects
 	ActMap map;
 	ActPlayer player;
+	
+	ActCamera camera;
 
 	ActManager() {
 
@@ -28,18 +30,20 @@ public class ActManager {
 
 		player = new ActPlayer();
 
+		camera = new ActCamera();
 		showing = Scene.MAP;
 	}
 
-	void updateMain() {
-		player.update(map);
-		map.move(player);
+	public void updateMain() {
+		player.update();
+		map.update();
+		
+		camera.update(this);
 	}
 
-	void drawMain(Graphics2D g, JFrame w) {
+	public void drawMain(Graphics2D g, JFrame w) {
 		g.setFont(GS.DEFAULT_FONT);
-		map.draw(g, w);
-		player.draw(g, w);
+		camera.draw(g, w);
 	}
 
 }

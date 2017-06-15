@@ -10,4 +10,6 @@ public class GS {
 	static double FRAME_TIME = 0.017;
 	static boolean MOUSE_CTRL = false;
 	static Font DEFAULT_FONT = new Font("Default", Font.BOLD, 16);
+	
+
 }
