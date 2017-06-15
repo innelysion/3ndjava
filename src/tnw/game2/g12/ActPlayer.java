@@ -31,7 +31,7 @@ public class ActPlayer {
 
 	ActPlayer() {
 		img = new KomaImage("image/humo.png", 3, 5);
-		mapPosX = 250;
+		mapPosX = 300;
 		mapPosY = 250;
 		animeIndex = 3;
 		facing = 4;

@@ -63,7 +63,7 @@ public class ActCamera {
 				: focusTargetY;
 
 		// Smooth the camera moving
-		if (isSmoothMoving && (Math.abs(focusTargetX - focusX) > 1 || Math.abs(focusTargetY - focusY) > 1)) {
+		if (isSmoothMoving && (Math.abs(focusTargetX - focusX) > 0.5 || Math.abs(focusTargetY - focusY) > 0.5)) {
 			focusX += (focusTargetX - focusX) / smoothValue;
 			focusY += (focusTargetY - focusY) / smoothValue;
 		} else {
