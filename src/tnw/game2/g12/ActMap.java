@@ -39,6 +39,11 @@ public class ActMap {
 		mapSizeW = gameMapData1.get(0).size();
 		mapSizeH = gameMapData1.size();
 	}
+	
+	public boolean isHit(int x, int y){
+		return gameMapHitData1.get(y).get(x) == 2049;
+	}
+	
 
 	public void draw(Graphics2D g, JFrame w, double dX, double dY) {
 		
@@ -56,7 +61,8 @@ public class ActMap {
 			}
 		}
 		
-
+//		g.setFont(GS.DEFAULT_FONT);
+//		g.setColor(Color.WHITE);
 //		for (int i = 0; i < mapSizeH; i++) {
 //			for (int j = 0; j < mapSizeW; j++) {
 //				if (usingMapHitData.get(i).get(j) != 255) {

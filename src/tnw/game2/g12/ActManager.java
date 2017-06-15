@@ -35,7 +35,7 @@ public class ActManager {
 	}
 
 	public void updateMain() {
-		player.update();
+		player.update(map);
 		map.update();
 		
 		camera.update(this);

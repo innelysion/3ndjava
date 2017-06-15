@@ -15,7 +15,7 @@ class GameMain {
 	//Initialize jframe window and graphic
 	JFrame window = new JFrame("114514");
 	Insets insets;
-	BufferStrategy drawer;
+	BufferStrategy buffer;
 
 	//Initialize main loop timer task
 	Timer timer = new Timer();
@@ -31,17 +31,17 @@ class GameMain {
 	GameMain() {
 
 		//Setup jframe window and graphic
+		window.setIgnoreRepaint(true);	
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setResizable(false);
 		window.setBackground(Color.BLACK);
+		window.setResizable(false);
 		window.setVisible(true);
 		insets = window.getInsets();
 		window.setSize(GS.WINSIZE_W + insets.left + insets.right, GS.WINSIZE_H + insets.top + insets.bottom);
 		window.setLocationRelativeTo(null);
-		window.setIgnoreRepaint(true);
 		window.createBufferStrategy(2);
-		drawer = window.getBufferStrategy();
-
+		buffer = window.getBufferStrategy();
+		
 		//Setup input
 		window.addMouseListener(input);
 		window.addMouseMotionListener(input);
@@ -57,7 +57,7 @@ class GameMain {
 		mainloop.cancel();
 		timer.cancel();
 		timer.purge();
-		drawer.dispose();
+		buffer.dispose();
 		window.dispose();
 		System.gc();
 	}
@@ -66,20 +66,20 @@ class GameMain {
 	class MainLoop extends TimerTask {
 
 		public void run() {
-			Graphics2D graphic = (Graphics2D) drawer.getDrawGraphics();
+			Graphics2D graphic = (Graphics2D) buffer.getDrawGraphics();
 
 			//main update
 			input.update(window);
 			manager.updateMain();
 
-			if (drawer.contentsLost() == false) {
+			if (buffer.contentsLost() == false) {
 				graphic.translate(insets.left, insets.top);
 				graphic.clearRect(0, 0, GS.WINSIZE_W, GS.WINSIZE_H);
 
 				//main draw
 				manager.drawMain(graphic, window);
 
-				drawer.show();
+				buffer.show();
 				graphic.dispose();
 			}
 		}

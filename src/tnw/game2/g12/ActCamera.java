@@ -50,8 +50,8 @@ public class ActCamera {
 			focusTargetY += Input.keyPr.DOWN ? 16 : 0;
 		} else {
 			smoothValue = 32;
-			focusTargetX = m.player.X - GS.WINSIZE_W / 2 + 20;
-			focusTargetY = m.player.Y - GS.WINSIZE_H / 2 + 28;
+			focusTargetX = m.player.X - GS.WINSIZE_W / 2 + m.player.sizeW / 2;
+			focusTargetY = m.player.Y - GS.WINSIZE_H / 2 + m.player.sizeH / 2;
 		}
 
 		// Set limit to stay in map area
@@ -92,8 +92,9 @@ public class ActCamera {
 
 		// Debug
 		g.setColor(Color.BLUE);
-		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f)));
-		g.fillRect(20, 20, 400, 160);
+		g.drawRect(20, 20, 250, 240);
+		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)));
+		g.fillRect(20, 20, 250, 240);
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
 		g.setColor(Color.WHITE);
 		g.drawString("Camera : " + (int) focusX + "," + (int) focusY, 30, 40);
@@ -101,6 +102,9 @@ public class ActCamera {
 		g.drawString("PlayerMapPos : " + m.player.X + "," + m.player.Y, 30, 80);
 		g.drawString("Press 'Z' to switch camera", 30, 120);
 		g.drawString("CameraMode : " + (freeMode ? "Free" : "Focus Player"), 30, 140);
-
+		g.drawString("Hit Left : " + m.player.isHitLeft(), 30, 180);
+		g.drawString("Hit Up : " + m.player.isHitUp(), 30, 200);
+		g.drawString("Hit Right : " + m.player.isHitRight(), 30, 220);
+		g.drawString("Hit Down : " + m.player.isHitDown(), 30, 240);
 	}
 }
