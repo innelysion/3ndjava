@@ -76,13 +76,14 @@ class KomaImage {
 	private int widthBlock; // 横分割数
 	private int heightBlock; // 縦分割数
 
+	// 標準的な初期化
 	KomaImage(String fileName, int wBlock, int hBlock) {
 		setNewImage(fileName);
 		setNewBlock(wBlock, hBlock);
 	}
 
 	// 新しい画像と分割数をセット
-	public void setNewAll(String fileName, int wBlock, int hBlock) {
+	public void setNew(String fileName, int wBlock, int hBlock) {
 		setNewImage(fileName);
 		setNewBlock(wBlock, hBlock);
 	}
@@ -105,36 +106,38 @@ class KomaImage {
 	// [4][5][6][7]
 	public void drawKoma(Graphics2D g, JFrame window, int blockIndex, double dX, double dY, float opacity) {
 
-		// indexの値を制限
-		blockIndex = blockIndex < 0 ? 0 : blockIndex + 1;
-		// 一コマの幅をゲット
-		int blockW = file.getWidth() / widthBlock;
-		// 一コマの高さをゲット
-		int blockH = file.getHeight() / heightBlock;
-		// 描画したいコマの左上端座標をゲット
-		int indexX = (blockIndex % widthBlock == 0) ? blockW * (widthBlock - 1)
-				: blockW * ((blockIndex % widthBlock) - 1);
-		int indexY = (blockIndex % widthBlock == 0) ? blockH * (blockIndex / widthBlock - 1)
-				: blockH * (blockIndex / widthBlock);
-		// 不透明度
-		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity)));
+		if (file != null) {
+			// indexの値を制限
+			blockIndex = blockIndex < 0 ? 0 : blockIndex + 1;
+			// 一コマの幅をゲット
+			int blockW = file.getWidth() / widthBlock;
+			// 一コマの高さをゲット
+			int blockH = file.getHeight() / heightBlock;
+			// 描画したいコマの左上端座標をゲット
+			int indexX = (blockIndex % widthBlock == 0) ? blockW * (widthBlock - 1)
+					: blockW * ((blockIndex % widthBlock) - 1);
+			int indexY = (blockIndex % widthBlock == 0) ? blockH * (blockIndex / widthBlock - 1)
+					: blockH * (blockIndex / widthBlock);
+			// 不透明度
+			g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity)));
 
-		// 描画
-		g.drawImage(file,
-				// 画面に描画する場所
-				(int) (dX), // 左上端X座標
-				(int) (dY), // 左上端Y座標
-				(int) (dX + blockW), // 右下端X座標
-				(int) (dY + blockH), // 右下端Y座標
-				// 画像ファイルのどこを使う
-				(int) (indexX), // 左上端X座標
-				(int) (indexY), // 左上端Y座標
-				(int) (indexX + blockW), // 右下端X座標
-				(int) (indexY + blockH), // 右下端Y座標
-				window);
+			// 描画
+			g.drawImage(file,
+					// 画面に描画する場所
+					(int) (dX), // 左上端X座標
+					(int) (dY), // 左上端Y座標
+					(int) (dX + blockW), // 右下端X座標
+					(int) (dY + blockH), // 右下端Y座標
+					// 画像ファイルのどこを使う
+					(int) (indexX), // 左上端X座標
+					(int) (indexY), // 左上端Y座標
+					(int) (indexX + blockW), // 右下端X座標
+					(int) (indexY + blockH), // 右下端Y座標
+					window);
 
-		// 不透明度リセット
-		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
+			// 不透明度リセット
+			g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
+		}
 	}
 
 	// 画像ファイルを読み込む

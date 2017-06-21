@@ -7,9 +7,10 @@ import java.awt.Font;
 public class GS {
 	static int WINSIZE_W = 1280;
 	static int WINSIZE_H = 720;
+	static int MAP_HITVALUE = 2049;
 	static double FRAME_TIME = 0.017;
 	static boolean MOUSE_CTRL = false;
+	static boolean ACT_GAMEMODE = false;
 	static Font DEFAULT_FONT = new Font("Default", Font.BOLD, 16);
-	
 
 }

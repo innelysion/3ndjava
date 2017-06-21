@@ -9,40 +9,31 @@ import javax.swing.JFrame;
 public class ActCamera {
 
 	private ActManager m;
+	private ActCharacters focusingOnChara;
 
 	private double focusX, focusY, focusTargetX, focusTargetY;
-	private double playerX, playerY;
 	private double mapX, mapY;
 
 	private int smoothValue;
 	boolean isSmoothMoving;
-	boolean freeMode;
 
 	ActCamera() {
 		focusX = 0;
 		focusY = 0;
-		playerX = 0;
-		playerY = 0;
 		mapX = 0;
 		mapY = 0;
 		focusTargetX = 0;
 		focusTargetY = 0;
 		smoothValue = 16;
 		isSmoothMoving = true;
-		freeMode = false;
 	}
 
 	public void update(ActManager mgr) {
 		// Get manager data
 		m = mgr;
 
-		// Switch camera mode
-		if (Input.keyRe.Z) {
-			freeMode = !freeMode;
-		}
-
-		// Free camera of focus on player
-		if (freeMode) {
+		// Free camera of focus on target
+		if (focusingOnChara == null) {
 			smoothValue = 8;
 			focusTargetX -= Input.keyPr.LEFT ? 16 : 0;
 			focusTargetX += Input.keyPr.RIGHT ? 16 : 0;
@@ -50,8 +41,8 @@ public class ActCamera {
 			focusTargetY += Input.keyPr.DOWN ? 16 : 0;
 		} else {
 			smoothValue = 32;
-			focusTargetX = m.player.X - GS.WINSIZE_W / 2 + m.player.sizeW / 2;
-			focusTargetY = m.player.Y - GS.WINSIZE_H / 2 + m.player.sizeH / 2;
+			focusTargetX = focusingOnChara.X - GS.WINSIZE_W / 2 + m.player.sizeW / 2;
+			focusTargetY = focusingOnChara.Y - GS.WINSIZE_H / 2 + m.player.sizeH / 2;
 		}
 
 		// Set limit to stay in map area
@@ -72,39 +63,66 @@ public class ActCamera {
 		}
 
 		// Set final position for draw
-		playerX = m.player.X - focusX;
-		playerY = m.player.Y - focusY;
 		mapX = -focusX;
 		mapY = -focusY;
 	}
 
 	// Set camera to free mode and focus a position
-	public void focus(double x, double y) {
-		freeMode = true;
+	public void freePosFocus(double x, double y) {
+		focusingOnChara = null;
 		focusTargetX = x;
 		focusTargetY = y;
 	}
 
+	// *START*Get & Set
+
+	public boolean isFree() {
+		return focusingOnChara == null;
+	}
+
+	public void setFocusChara(ActCharacters chara) {
+		focusingOnChara = chara;
+	}
+
+	public ActActor getFocusChara() {
+		return (ActActor) focusingOnChara;
+	}
+	// *END*
+
 	// Draw game objects
 	public void draw(Graphics2D g, JFrame w) {
 		m.map.draw(g, w, mapX, mapY);
-		m.player.draw(g, w, playerX, playerY);
+		m.player.draw(g, w, focusX, focusY);
+		m.npc1.draw(g, w, focusX, focusY);
+		m.npc2.draw(g, w, focusX, focusY);
 
 		// Debug
 		g.setColor(Color.BLUE);
-		g.drawRect(20, 20, 250, 240);
+		g.drawRect(20, 20, 300, 160);
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)));
-		g.fillRect(20, 20, 250, 240);
+		g.fillRect(20, 20, 300, 160);
+		g.setColor(Color.RED);
+		if (m.player.path != null) {
+			for (Node n : m.player.path) {
+				g.fillRect((int)(n.y * 16 - focusX), (int)(n.x * 16 - focusY), 16, 16);
+			}
+		}
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
 		g.setColor(Color.WHITE);
-		g.drawString("Camera : " + (int) focusX + "," + (int) focusY, 30, 40);
-		g.drawString("CameraTarget : " + (int) focusTargetX + "," + (int) focusTargetY, 30, 60);
+		g.drawString("G12張瀚夫", 30, 40);
+		g.drawString("Camera : " + (int) focusX + "," + (int) focusY, 30, 60);
 		g.drawString("PlayerMapPos : " + m.player.X + "," + m.player.Y, 30, 80);
-		g.drawString("Press 'Z' to switch camera", 30, 120);
-		g.drawString("CameraMode : " + (freeMode ? "Free" : "Focus Player"), 30, 140);
-		g.drawString("Hit Left : " + m.player.isHitLeft(), 30, 180);
-		g.drawString("Hit Up : " + m.player.isHitUp(), 30, 200);
-		g.drawString("Hit Right : " + m.player.isHitRight(), 30, 220);
-		g.drawString("Hit Down : " + m.player.isHitDown(), 30, 240);
+		g.drawString("【Zｷｰ】カメラの目標点を切り替え", 30, 120);
+		g.drawString("カメラの目標点 : " + ((ActActor) focusingOnChara).getName(), 30, 140);
+		// g.drawString("Press 'X' to switch control mode", 30, 160);
+		// g.drawString("PlayerMode : " + (GS.ACT_GAMEMODE ? "ACT" : "RPG"), 30,
+		// 180);
+
+		// g.drawString("Hit Left : " + m.player.isHitLeft(), 30, 220);
+		// g.drawString("Hit Up : " + m.player.isHitUp(), 30, 240);
+		// g.drawString("Hit Right : " + m.player.isHitRight(), 30, 260);
+		// g.drawString("Hit Down : " + m.player.isHitDown(), 30, 280);
+		// g.drawString("Force : " + (int) m.player.getForce(), 30, 300);
+
 	}
 }

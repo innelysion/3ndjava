@@ -176,35 +176,35 @@ public class Input implements MouseListener, MouseMotionListener, MouseWheelList
 			keyPr.ESC = false;
 			break;
 		case KeyEvent.VK_LEFT:
-			keyRe.LEFT = true;
+//			keyRe.LEFT = true;
 			keyPr.LEFT = false;
 			break;
 		case KeyEvent.VK_UP:
-			keyRe.UP = true;
+//			keyRe.UP = true;
 			keyPr.UP = false;
 			break;
 		case KeyEvent.VK_RIGHT:
-			keyRe.RIGHT = true;
+//			keyRe.RIGHT = true;
 			keyPr.RIGHT = false;
 			break;
 		case KeyEvent.VK_DOWN:
-			keyRe.DOWN = true;
+//			keyRe.DOWN = true;
 			keyPr.DOWN = false;
 			break;
 		case KeyEvent.VK_NUMPAD4:
-			keyRe.LEFT = true;
+//			keyRe.LEFT = true;
 			keyPr.LEFT = false;
 			break;
 		case KeyEvent.VK_NUMPAD8:
-			keyRe.UP = true;
+//			keyRe.UP = true;
 			keyPr.UP = false;
 			break;
 		case KeyEvent.VK_NUMPAD6:
-			keyRe.RIGHT = true;
+//			keyRe.RIGHT = true;
 			keyPr.RIGHT = false;
 			break;
 		case KeyEvent.VK_NUMPAD2:
-			keyRe.DOWN = true;
+//			keyRe.DOWN = true;
 			keyPr.DOWN = false;
 			break;
 		case KeyEvent.VK_Z:
@@ -219,6 +219,16 @@ public class Input implements MouseListener, MouseMotionListener, MouseWheelList
 			keyRe.C = true;
 			keyPr.C = false;
 			break;
+		default:
+//			keyRe.SHIFT = false;
+////			keyRe.ESC = false;
+//			keyRe.LEFT = false;
+//			keyRe.UP = false;
+//			keyRe.RIGHT = false;
+//			keyRe.DOWN = false;
+			keyRe.Z = false;
+			keyRe.X = false;
+			keyRe.C = false;
 		}
 
 		dirCheck();
@@ -307,13 +317,14 @@ class GameKeyPressed {
 }
 
 class GamekeyReleased {
-	boolean SHIFT, ESC, Z, X, C, LEFT, UP, RIGHT, DOWN;
-	private boolean rSHIFT, rESC, rZ, rX, rC, rLEFT, rUP, rRIGHT, rDOWN;
+	boolean SHIFT, ESC, Z, X, C;// , LEFT, UP, RIGHT, DOWN;
+	private boolean rSHIFT, rESC, rZ, rX, rC;// , rLEFT, rUP, rRIGHT, rDOWN;
 
 	void reset() {
 		// Maybe Add more
-		boolean[] key = { SHIFT, ESC, Z, X, C, LEFT, UP, RIGHT, DOWN };
-		boolean[] keyr = { rSHIFT, rESC, rZ, rX, rC, rLEFT, rUP, rRIGHT, rDOWN };
+		boolean[] key = { SHIFT, ESC, Z, X, C };// LEFT, UP, RIGHT, DOWN };
+		boolean[] keyr = { rSHIFT, rESC, rZ, rX, rC };// , rLEFT, rUP, rRIGHT,
+														// rDOWN };
 		for (int i = 0; i < key.length; i++) {
 			if (key[i] && keyr[i]) {
 				key[i] = false;
@@ -328,20 +339,20 @@ class GamekeyReleased {
 		Z = key[2];
 		X = key[3];
 		C = key[4];
-		LEFT = key[5];
-		RIGHT = key[6];
-		UP = key[7];
-		DOWN = key[8];
+//		LEFT = key[5];
+//		RIGHT = key[6];
+//		UP = key[7];
+//		DOWN = key[8];
 		// Maybe Add more
 		rSHIFT = keyr[0];
 		rESC = keyr[1];
 		rZ = keyr[2];
 		rX = keyr[3];
 		rC = keyr[4];
-		rLEFT = keyr[5];
-		rRIGHT = keyr[6];
-		rUP = keyr[7];
-		rDOWN = keyr[8];
+//		rLEFT = keyr[5];
+//		rRIGHT = keyr[6];
+//		rUP = keyr[7];
+//		rDOWN = keyr[8];
 	}
 }
 
