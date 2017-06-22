@@ -1,7 +1,6 @@
 package tnw.game2.g12;
 
 import java.awt.Graphics2D;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -15,7 +14,7 @@ public class ActActor extends ActCharacters {
 	private int moveMode;
 	private int offsetSize;
 	private int timer;
-	
+
 	ActActor(int who) {
 		super();
 		switch (who) {
@@ -26,7 +25,7 @@ public class ActActor extends ActCharacters {
 			moveMode = 1;
 			mapPosX = 820;
 			mapPosY = 790;
-			setSize(40,48);
+			setSize(40, 48);
 			offsetSize = 8;
 			break;
 		case 2:
@@ -38,7 +37,7 @@ public class ActActor extends ActCharacters {
 			mapPosY = 450;
 			setMoveSpd(2);
 			setMoveSpdObl(1);
-			setSize(80,64);
+			setSize(80, 64);
 			break;
 		case 3:
 			img = new KomaImage("image/mon09.png", 3, 4);
@@ -47,7 +46,9 @@ public class ActActor extends ActCharacters {
 			moveMode = 3;
 			mapPosX = 256;
 			mapPosY = 800;
-			setSize(40,48);
+			setSize(40, 48);
+			setMoveSpd(4);
+			setMoveSpdObl(1);
 			offsetSize = 16;
 			break;
 		}
@@ -55,13 +56,29 @@ public class ActActor extends ActCharacters {
 
 	public void update(ActMap m) {
 		super.update(m);
-		
+
 		// Main timer for actions
 		timer = timer > 9999 ? 0 : timer + 1;
-		
-		if (Input.keyRe.X && id == 1){
-			moveTo(new Random().nextInt(50), new Random().nextInt(50));
+
+		if (id == 3) {
+			if (flag == 0) {
+				flag = 1;
+				moveTo(432, 208);
+			}
+			if (mapPosX == 432 && mapPosY == 208 && flag == 1) {
+				flag = 2;
+				moveTo(1536, 560);
+			}
+			if (mapPosX == 1536 && mapPosY == 560 && flag == 2) {
+				flag = 3;
+				moveTo(2272, 1072);
+			}
+			if (mapPosX == 2272 && mapPosY == 1072 && flag == 3) {
+				flag = 1;
+				moveTo(432, 208);
+			}
 		}
+
 		// Movement mode
 		if (!isFreezing()) {
 			animation();

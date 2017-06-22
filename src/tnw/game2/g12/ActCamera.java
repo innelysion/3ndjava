@@ -17,6 +17,9 @@ public class ActCamera {
 	private int smoothValue;
 	boolean isSmoothMoving;
 
+	private float pathflash;
+	private boolean flash;
+
 	ActCamera() {
 		focusX = 0;
 		focusY = 0;
@@ -25,12 +28,29 @@ public class ActCamera {
 		focusTargetX = 0;
 		focusTargetY = 0;
 		smoothValue = 16;
+		pathflash = 0f;
+		flash = false;
 		isSmoothMoving = true;
 	}
 
 	public void update(ActManager mgr) {
 		// Get manager data
 		m = mgr;
+
+		// Flash path
+		if (flash) {
+			pathflash -= 0.01f;
+			if (pathflash <= 0f) {
+				pathflash = 0f;
+				flash = false;
+			}
+		} else {
+			pathflash += 0.01f;
+			if (pathflash >= 0.6f) {
+				pathflash = 0.6f;
+				flash = true;
+			}
+		}
 
 		// Free camera of focus on target
 		if (focusingOnChara == null) {
@@ -101,19 +121,20 @@ public class ActCamera {
 		g.drawRect(20, 20, 300, 160);
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)));
 		g.fillRect(20, 20, 300, 160);
-		g.setColor(Color.RED);
-		if (m.player.path != null) {
-			for (Node n : m.player.path) {
-				g.fillRect((int)(n.y * 16 - focusX), (int)(n.x * 16 - focusY), 16, 16);
+		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pathflash)));
+		g.setColor(Color.WHITE);
+		if (m.npc2.path != null) {
+			for (Node n : m.npc2.path) {
+				g.fillRect((int) (n.y - focusX), (int) (n.x - focusY), 16, 16);
 			}
 		}
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
 		g.setColor(Color.WHITE);
 		g.drawString("G12張瀚夫", 30, 40);
 		g.drawString("Camera : " + (int) focusX + "," + (int) focusY, 30, 60);
-		g.drawString("PlayerMapPos : " + m.player.X + "," + m.player.Y, 30, 80);
 		g.drawString("【Zｷｰ】カメラの目標点を切り替え", 30, 120);
 		g.drawString("カメラの目標点 : " + ((ActActor) focusingOnChara).getName(), 30, 140);
+		g.drawString(((ActActor) focusingOnChara).getName() + "の座標 : " + ((ActActor) focusingOnChara).X + "," + ((ActActor) focusingOnChara).Y, 30, 160);
 		// g.drawString("Press 'X' to switch control mode", 30, 160);
 		// g.drawString("PlayerMode : " + (GS.ACT_GAMEMODE ? "ACT" : "RPG"), 30,
 		// 180);

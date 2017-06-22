@@ -2,6 +2,7 @@ package tnw.game2.g12;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class AStarFindPath {
 
@@ -9,22 +10,23 @@ public class AStarFindPath {
 	private int STEP = 10;
 	private ArrayList<Node> openList = new ArrayList<Node>();
 	private ArrayList<Node> closeList = new ArrayList<Node>();
-	
+
 	AStarFindPath(){
 	}
-	
-	public ArrayList<Node> search(int[][]hitdata, Node startNode, Node endNode){
+
+	public Stack<Node> search(int[][]hitdata, Node startNode, Node endNode){
 		NODES = hitdata;
 		openList.clear();
 		closeList.clear();
 		Node parent = findPath(startNode, endNode);
-		ArrayList<Node> arrayList = new ArrayList<Node>();
+		Stack<Node> arrayList = new Stack<Node>();
 
 		while (parent != null) {
-			arrayList.add(new Node(parent.x, parent.y));
+			arrayList.push(new Node(parent.x, parent.y));
 			parent = parent.parent;
 		}
 		return arrayList;
+
 	}
 
 	private Node findMinFNodeInOpneList() {
