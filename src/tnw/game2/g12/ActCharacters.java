@@ -83,40 +83,99 @@ public abstract class ActCharacters {
 
 		// Auto follow path
 		if (isFollowingPath && !path.isEmpty()) {
+			followPath();
+		}
+	}
+
+	// Find path (using A*) to target position
+	public void moveTo(int x, int y) {
+		// Clear exist path
+		isFollowingPath = true;
+		path.clear();
+
+		// Create map node data when find path first time
+		if (mapHitDataForFindPath == null) {
+			mapHitDataForFindPath = new int[map.mapSizeH][map.mapSizeW];
+			for (int i = 0; i < map.mapSizeH; i++) {
+				for (int j = 0; j < map.mapSizeW; j++) {
+					mapHitDataForFindPath[i][j] = map.getHitValue(j, i) == GS.MAP_HITVALUE ? 1 : 0;
+				}
+			}
+
+			// Soucre data fit character's size (shift 16x16 map block two
+			// times)
+			for (int i = 0; i < map.mapSizeH; i++) {
+				for (int j = 0; j < map.mapSizeW; j++) {
+					if (i > 1 && j > 1 && mapHitDataForFindPath[i][j] == 1) {
+						mapHitDataForFindPath[i - 1][j] = 1;
+						mapHitDataForFindPath[i][j - 1] = 1;
+						mapHitDataForFindPath[i - 1][j - 1] = 1;
+						mapHitDataForFindPath[i - 2][j] = 1;
+						mapHitDataForFindPath[i][j - 2] = 1;
+						mapHitDataForFindPath[i - 2][j - 2] = 1;
+					}
+				}
+			}
+		}
+		
+		// Create start point (character's position) and end point
+		Node start = new Node((mapPosY + offsetSize) / 16, mapPosX / 16);
+		Node end = new Node(y / 16, x / 16);
+
+		// Use A* to get a path node stack
+		if (start != end) {
 			isMoving = true;
-			int targetX = path.get(path.size() - 1).y;
-			int targetY = path.get(path.size() - 1).x;
+			path = findpath.search(mapHitDataForFindPath, start, end);
+		} else {
+			isMoving = false;
+			isFollowingPath = false;
+		}
+		// Set following path and resize it
+		for (Node n : path) {
+			n.x *= 16;
+			n.y *= 16;
+		}
+	}
 
-			if (mapPosX > targetX) {
-				moveLeft();
-				tryToFollowTimes++;
-			}
-			if (mapPosX < targetX) {
-				moveRight();
-				tryToFollowTimes++;
-			}
-			if (mapPosY > targetY) {
-				moveUp();
-				tryToFollowTimes++;
-			}
-			if (mapPosY < targetY) {
-				moveDown();
-				tryToFollowTimes++;
-			}
+	// Move across path to target
+	private void followPath() {
+		// Retry times
+		tryToFollowTimes++;
+		
+		// Get next node position
+		int targetX = path.get(path.size() - 1).y;
+		int targetY = path.get(path.size() - 1).x;
+		
+		// DIR4 move
+		if (mapPosX > targetX) {
+			moveLeft();
+		}
+		if (mapPosX < targetX) {
+			moveRight();
+		}
+		if (mapPosY > targetY) {
+			moveUp();
+		}
+		if (mapPosY < targetY) {
+			moveDown();
+		}
+		
+		// Fix position if retry too many times
+		if (tryToFollowTimes > 100) {
+			mapPosX = targetX;
+			mapPosY = targetY;
+		}
+		
+		// Next node
+		if (mapPosX == targetX && mapPosY == targetY) {
+			path.pop();
+			tryToFollowTimes = 0;
+		}
 
-			if (tryToFollowTimes > 10) {
-				mapPosX = targetX;
-				mapPosY = targetY;
-			}
-			if (mapPosX == targetX && mapPosY == targetY) {
-				path.pop();
-				tryToFollowTimes = 0;
-			}
-
-			if (path.isEmpty()) {
-				isFollowingPath = false;
-				isMoving = false;
-			}
+		// End of path
+		if (path.isEmpty()) {
+			isFollowingPath = false;
+			isMoving = false;
 		}
 	}
 
@@ -172,50 +231,6 @@ public abstract class ActCharacters {
 
 	// *END*
 
-	// Find path (using A*) to target position
-	public void moveTo(int x, int y) {
-		// Clear exist path
-		path.clear();
-
-		// Create map node data when find path first time
-		if (mapHitDataForFindPath == null) {
-			mapHitDataForFindPath = new int[map.mapSizeH][map.mapSizeW];
-			for (int i = 0; i < map.mapSizeH; i++) {
-				for (int j = 0; j < map.mapSizeW; j++) {
-					mapHitDataForFindPath[i][j] = map.getHitValue(j, i) == GS.MAP_HITVALUE ? 1 : 0;
-				}
-			}
-
-			// Soucre data fit character's size (shift 16x16 map block two
-			// times)
-			for (int i = 0; i < map.mapSizeH; i++) {
-				for (int j = 0; j < map.mapSizeW; j++) {
-					if (i > 1 && j > 1 && mapHitDataForFindPath[i][j] == 1) {
-						mapHitDataForFindPath[i - 1][j] = 1;
-						mapHitDataForFindPath[i][j - 1] = 1;
-						mapHitDataForFindPath[i - 1][j - 1] = 1;
-						mapHitDataForFindPath[i - 2][j] = 1;
-						mapHitDataForFindPath[i][j - 2] = 1;
-						mapHitDataForFindPath[i - 2][j - 2] = 1;
-					}
-				}
-			}
-		}
-		// Create start point (character's position) and end point
-		Node start = new Node((mapPosY + offsetSize) / 16, mapPosX / 16);
-		Node end = new Node(y / 16, x / 16);
-
-		// Use A* to get a path node stack
-		path = findpath.search(mapHitDataForFindPath, start, end);
-
-		// Set following path and resize it
-		isFollowingPath = true;
-		for (Node n : path) {
-			n.x *= 16;
-			n.y *= 16;
-		}
-	}
-
 	// Random dir4 movement
 	public void randomMove() {
 		// Get random movement dirction and time interval
@@ -262,7 +277,7 @@ public abstract class ActCharacters {
 
 	public boolean isHitRight() {
 		for (int i = mapPosY + 2; i <= mapPosY + sizeHeight - 2; i += 4) {
-			if (isHitMap(mapPosX + sizeWidth + 1, i)) {
+			if (isHitMap(mapPosX + sizeWidth, i)) {
 				return true;
 			}
 		}
@@ -271,7 +286,7 @@ public abstract class ActCharacters {
 
 	public boolean isHitDown() {
 		for (int i = mapPosX + 2; i <= mapPosX + sizeWidth - 2; i += 4) {
-			if (isHitMap(i, mapPosY + sizeHeight + 1)) {
+			if (isHitMap(i, mapPosY + sizeHeight)) {
 				return true;
 			}
 		}

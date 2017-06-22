@@ -111,7 +111,20 @@ public class ActCamera {
 
 	// Draw game objects
 	public void draw(Graphics2D g, JFrame w) {
+		// Draw map blocks
 		m.map.draw(g, w, mapX, mapY);
+
+		// Draw path
+		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pathflash)));
+		g.setColor(Color.WHITE);
+		if (m.npc2.path != null) {
+			for (Node n : m.npc2.path) {
+				g.fillRect((int) (n.y - focusX), (int) (n.x - focusY), 16, 16);
+			}
+		}
+		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
+
+		// Draw characters
 		m.player.draw(g, w, focusX, focusY);
 		m.npc1.draw(g, w, focusX, focusY);
 		m.npc2.draw(g, w, focusX, focusY);
@@ -121,20 +134,14 @@ public class ActCamera {
 		g.drawRect(20, 20, 300, 160);
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f)));
 		g.fillRect(20, 20, 300, 160);
-		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pathflash)));
-		g.setColor(Color.WHITE);
-		if (m.npc2.path != null) {
-			for (Node n : m.npc2.path) {
-				g.fillRect((int) (n.y - focusX), (int) (n.x - focusY), 16, 16);
-			}
-		}
 		g.setComposite((AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f)));
 		g.setColor(Color.WHITE);
 		g.drawString("G12張瀚夫", 30, 40);
 		g.drawString("Camera : " + (int) focusX + "," + (int) focusY, 30, 60);
 		g.drawString("【Zｷｰ】カメラの目標点を切り替え", 30, 120);
 		g.drawString("カメラの目標点 : " + ((ActActor) focusingOnChara).getName(), 30, 140);
-		g.drawString(((ActActor) focusingOnChara).getName() + "の座標 : " + ((ActActor) focusingOnChara).X + "," + ((ActActor) focusingOnChara).Y, 30, 160);
+		g.drawString(((ActActor) focusingOnChara).getName() + "の座標 : " + ((ActActor) focusingOnChara).X + ","
+				+ ((ActActor) focusingOnChara).Y, 30, 160);
 		// g.drawString("Press 'X' to switch control mode", 30, 160);
 		// g.drawString("PlayerMode : " + (GS.ACT_GAMEMODE ? "ACT" : "RPG"), 30,
 		// 180);

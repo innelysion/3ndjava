@@ -11,22 +11,18 @@ public class AStarFindPath {
 	private ArrayList<Node> openList = new ArrayList<Node>();
 	private ArrayList<Node> closeList = new ArrayList<Node>();
 
-	AStarFindPath(){
-	}
-
 	public Stack<Node> search(int[][]hitdata, Node startNode, Node endNode){
 		NODES = hitdata;
 		openList.clear();
 		closeList.clear();
 		Node parent = findPath(startNode, endNode);
-		Stack<Node> arrayList = new Stack<Node>();
+		Stack<Node> path = new Stack<Node>();
 
 		while (parent != null) {
-			arrayList.push(new Node(parent.x, parent.y));
+			path.push(new Node(parent.x, parent.y));
 			parent = parent.parent;
 		}
-		return arrayList;
-
+		return path;
 	}
 
 	private Node findMinFNodeInOpneList() {

@@ -25,6 +25,8 @@ public class ActActor extends ActCharacters {
 			moveMode = 1;
 			mapPosX = 820;
 			mapPosY = 790;
+			setMoveSpd(8);
+			setMoveSpdObl(6);
 			setSize(40, 48);
 			offsetSize = 8;
 			break;
@@ -74,8 +76,8 @@ public class ActActor extends ActCharacters {
 				moveTo(2272, 1072);
 			}
 			if (mapPosX == 2272 && mapPosY == 1072 && flag == 3) {
-				flag = 1;
-				moveTo(432, 208);
+				flag = 4;
+//				moveTo(432, 208);
 			}
 		}
 
@@ -119,14 +121,7 @@ public class ActActor extends ActCharacters {
 		}
 		// RPG or ACT movement process
 		if (!GS.ACT_GAMEMODE) {
-			// Dash speed
-			if (Input.keyPr.SHIFT) {
-				setMoveSpd(6);
-				setMoveSpdObl(4);
-			} else {
-				setMoveSpd(4);
-				setMoveSpdObl(3);
-			}
+			
 			// RPG mode DIR8 movement process
 			switch (Input.DIR8) {
 			case 1:

@@ -22,8 +22,12 @@ public class ActManager {
 	ActActor npc2;
 	ActActor npc3;
 	ActCamera camera;
+	
+	private int timerMgr;
 
 	ActManager() {
+		
+		timerMgr = 0;
 
 		gamedata = new GameData();
 
@@ -42,7 +46,10 @@ public class ActManager {
 	}
 
 	public void updateMain() {
-		// Switch camera mode
+		// Main timer
+		timerMgr = timerMgr > 9999 ? 0 : timerMgr + 1;
+		
+		// Switch camera focus target
 		if (Input.keyRe.Z) {
 			switch (camera.getFocusChara().getId()){
 			case 1:
@@ -58,7 +65,13 @@ public class ActManager {
 				break;
 			}
 		}
+		
+		// Follow player
+		if (npc2.flag == 4 && timerMgr % 30 == 0 && npc2.X % 16 == 0 && npc2.Y % 16 == 0){
+			npc2.moveTo((int)(player.X / 16) * 16, (int)(player.Y / 16) * 16);
+		}
 
+		// Game objects update
 		player.update(map);
 		npc1.update(map);
 		npc2.update(map);
