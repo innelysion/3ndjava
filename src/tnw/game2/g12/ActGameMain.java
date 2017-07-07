@@ -95,6 +95,7 @@ public class ActGameMain {
 
 	public static void main(String[] args) {
 		// Start a new game
+		@SuppressWarnings("unused")
 		GameMain game = new GameMain();
 	}
 }

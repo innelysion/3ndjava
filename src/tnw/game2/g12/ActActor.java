@@ -25,8 +25,8 @@ public class ActActor extends ActCharacters {
 			moveMode = 1;
 			mapPosX = 820;
 			mapPosY = 790;
-			setMoveSpd(8);
-			setMoveSpdObl(6);
+			setMoveSpd(4);
+			setMoveSpdObl(3);
 			setSize(40, 48);
 			offsetSize = 8;
 			break;
@@ -121,7 +121,7 @@ public class ActActor extends ActCharacters {
 		}
 		// RPG or ACT movement process
 		if (!GS.ACT_GAMEMODE) {
-			
+
 			// RPG mode DIR8 movement process
 			switch (Input.DIR8) {
 			case 1:

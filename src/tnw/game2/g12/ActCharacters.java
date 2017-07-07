@@ -1,5 +1,9 @@
 package tnw.game2.g12;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Random;
 import java.util.Stack;
 
@@ -61,7 +65,7 @@ public abstract class ActCharacters {
 		force = 0;
 		smoothJumpPower = 4;
 		jumpPower = 10;
-		g = 0.5;
+		g = 0.6;
 
 		findingPath = false;
 		tryToFollowTimes = 0;
@@ -117,7 +121,7 @@ public abstract class ActCharacters {
 				}
 			}
 		}
-		
+
 		// Create start point (character's position) and end point
 		Node start = new Node((mapPosY + offsetSize) / 16, mapPosX / 16);
 		Node end = new Node(y / 16, x / 16);
@@ -135,17 +139,40 @@ public abstract class ActCharacters {
 			n.x *= 16;
 			n.y *= 16;
 		}
+
+		try {
+			FileOutputStream fs = new FileOutputStream(new File("D:\\text.txt"));
+			PrintStream p = new PrintStream(fs);
+			p.print("{");
+
+			for (int i = 0; i < mapHitDataForFindPath.length; i++) {
+				p.print("{");
+				for (int j = 0; j < mapHitDataForFindPath[0].length; j++) {
+					p.print(mapHitDataForFindPath[i][j]);
+					if (j != mapHitDataForFindPath[0].length - 1) {
+						p.print(",");
+					}
+				}
+				p.print("},");
+				p.println();
+			}
+
+			p.print("}");
+			p.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Move across path to target
 	private void followPath() {
 		// Retry times
 		tryToFollowTimes++;
-		
+
 		// Get next node position
 		int targetX = path.get(path.size() - 1).y;
 		int targetY = path.get(path.size() - 1).x;
-		
+
 		// DIR4 move
 		if (mapPosX > targetX) {
 			moveLeft();
@@ -159,13 +186,13 @@ public abstract class ActCharacters {
 		if (mapPosY < targetY) {
 			moveDown();
 		}
-		
+
 		// Fix position if retry too many times
 		if (tryToFollowTimes > 100) {
 			mapPosX = targetX;
 			mapPosY = targetY;
 		}
-		
+
 		// Next node
 		if (mapPosX == targetX && mapPosY == targetY) {
 			path.pop();
@@ -240,19 +267,42 @@ public abstract class ActCharacters {
 		}
 		isMoving = true;
 		// Movement
-		switch (randomMoveDir) {
-		case 0:
-			moveLeft();
-			break;
-		case 1:
-			moveUp();
-			break;
-		case 2:
-			moveRight();
-			break;
-		case 3:
-			moveDown();
-			break;
+		if (!GS.ACT_GAMEMODE) {
+			switch (randomMoveDir) {
+			case 0:
+				moveLeft();
+				break;
+			case 1:
+				moveUp();
+				break;
+			case 2:
+				moveRight();
+				break;
+			case 3:
+				moveDown();
+				break;
+			}
+		} else {
+			if (isHitUp() || getForce() < 0) {
+				setJumping(true);
+			}
+			switch (randomMoveDir) {
+			case 0:
+				moveLeft();
+				jump();
+				break;
+			case 1:
+				moveLeft();
+				break;
+			case 2:
+				moveRight();
+				jump();
+				break;
+			case 3:
+				moveRight();
+				break;
+			}
+			gravity();
 		}
 	}
 

@@ -22,18 +22,18 @@ public class ActManager {
 	ActActor npc2;
 	ActActor npc3;
 	ActCamera camera;
-	
+
 	private int timerMgr;
 
 	ActManager() {
-		
+
 		timerMgr = 0;
 
 		gamedata = new GameData();
 
 		map = new ActMap();
-		map.setMapData(gamedata.getMapData("mapdata/S1_Hit.csv"), "HITMAP");
-		map.setMapData(gamedata.getMapData("mapdata/S1_Map.csv"), "BACKGROUND");
+		map.setMapData(gamedata.getMapData("mapdata/S0_Hit.csv"), "HITMAP");
+		map.setMapData(gamedata.getMapData("mapdata/S0_Map.csv"), "BACKGROUND");
 
 		player = new ActActor(1);
 		npc1 = new ActActor(2);
@@ -48,7 +48,7 @@ public class ActManager {
 	public void updateMain() {
 		// Main timer
 		timerMgr = timerMgr > 9999 ? 0 : timerMgr + 1;
-		
+
 		// Switch camera focus target
 		if (Input.keyRe.Z) {
 			switch (camera.getFocusChara().getId()){
@@ -65,7 +65,7 @@ public class ActManager {
 				break;
 			}
 		}
-		
+
 		// Follow player
 		if (npc2.flag == 4 && timerMgr % 30 == 0 && npc2.X % 16 == 0 && npc2.Y % 16 == 0){
 			npc2.moveTo((int)(player.X / 16) * 16, (int)(player.Y / 16) * 16);
@@ -74,7 +74,7 @@ public class ActManager {
 		// Game objects update
 		player.update(map);
 		npc1.update(map);
-		npc2.update(map);
+		//npc2.update(map);
 		camera.update(this);
 	}
 

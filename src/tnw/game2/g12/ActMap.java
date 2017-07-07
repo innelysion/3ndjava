@@ -1,6 +1,5 @@
 package tnw.game2.g12;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -13,20 +12,20 @@ public class ActMap {
 	private KomaImage mapImage;
 	private int mapSizeWidth;
 	private int mapSizeHeight;
-	
+
 	// Read only
 	int mapSizeW;
 	int mapSizeH;
 
 	ActMap() {
-		//mapImage = new KomaImage("image/mapbg01.png", 40, 125);
-		mapImage = new KomaImage("image/mapbg02.png", 40, 81);
+		mapImage = new KomaImage("image/mapbg01.png", 40, 125);
+		//mapImage = new KomaImage("image/mapbg02.png", 40, 81);
 		mapSizeWidth = 0;
 		mapSizeHeight = 0;
 		mapSizeW = 0;
 		mapSizeH = 0;
 	}
-	
+
 	public void update(){
 	}
 
@@ -42,7 +41,7 @@ public class ActMap {
 		case "HITMAP":
 			gameMapHitData = data;
 			break;
-		}		
+		}
 	}
 
 	public int getHitValue(int x, int y){

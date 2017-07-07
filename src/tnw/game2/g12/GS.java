@@ -10,7 +10,7 @@ public class GS {
 	static int MAP_HITVALUE = 2049;
 	static double FRAME_TIME = 0.017;
 	static boolean MOUSE_CTRL = false;
-	static boolean ACT_GAMEMODE = false;
+	static boolean ACT_GAMEMODE = true;
 	static Font DEFAULT_FONT = new Font("Default", Font.BOLD, 16);
 
 }
